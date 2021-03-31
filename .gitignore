@@ -1,0 +1,5 @@
+*.vtk
+output/get_atoms.txt
+output/get_atoms2.txt
+output/get_config.txt
+main.exe
