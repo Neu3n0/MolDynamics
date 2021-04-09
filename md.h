@@ -7,10 +7,12 @@ class Cell;
 
 class Atom {
 public:
+	Atom() : Kinetic_en(0), LJ_potential(0) {}
 	double coord[3];
 	double vel[3];
 	double power[3];
 	double LJ_potential;
+	double Kinetic_en;
 	void Coord_shift(Space* space);		//Coordinates shift
 	void Power_shift(Atom* mol_prob, const double* shift);		//Power shift
 	void Veloc_shift(Space* space);		//Velocitie shift
@@ -55,3 +57,5 @@ double LJ_F(const double& r);		//Lennard jones power
 double LJ_P(const double& r);		//Lennard jones potential
 void SetNullMacro(Space* space);		//Set null macro
 int WriteVTK(Space* space);		//VTK
+void Get_energy(std::ofstream& fout, const Space& space);		//Get energy
+double Kin_En(Space* space, Atom* mol);		//Kinetic energy 

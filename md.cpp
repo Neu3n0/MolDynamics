@@ -227,6 +227,11 @@ double Kin_En(Space* space, Atom* mol) {
 	return space->m_N * (pow(mol->vel[0], 2) + pow(mol->vel[1], 2) + pow(mol->vel[2], 2)) / 2;
 }
 
+void Get_energy(std::ofstream& fout, const Space& space) {
+	fout << "Full energy = " << space.Energy << "\t" << "Kinetic energy = " 
+		<< space.Kin_En << "\t" << "Potential energy = " << space.Pot_En << "\n";
+}
+
 void Print_atoms(const Space& space) {
 	ofstream fout;
 	fout.open("C:\\Drive\\Code\\MolDynamics\\md_v1.0\\Output\\get_atoms.txt");
