@@ -6,6 +6,9 @@ Space::Space() : N_2() {
 	fin >> this->total_mol >> this->T >> this->p >> dt >> this->spacesize >> this->cellsize;
 	amount_cells = static_cast<int>(this->spacesize / this->cellsize);
 	m_N = (0.002 / 6.022) / 1000.0;
+	Kin_En = 0;
+	Pot_En = 0;
+	Energy = 0;
 	fin.close();
 }
 
@@ -119,6 +122,10 @@ void Space::MDStep() {
 			}
 		}
 	}
+
+	//Energy
+	this->Pot_En /= 2;
+	this->Energy = this->Pot_En + this->Kin_En;
 }
 
 void Atom::Coord_shift(Space* space) {
@@ -153,6 +160,9 @@ void Atom::Veloc_shift(Space* space) {
 	for (int n = 0; n < 3; ++n) {
 		this->vel[n] += (this->power[n] * (space->dt / space->m_N));
 	}
+	this->Kinetic_en = Kin_En(space, this);
+	space->Kin_En += this->Kinetic_en;
+	space->Pot_En += this->LJ_potential;
 }
 
 int Atom::Change_Cell(Space* space, int i0, int j0, int k0, int l) {
@@ -187,6 +197,9 @@ int Atom::Change_Cell(Space* space, int i0, int j0, int k0, int l) {
 }
 
 void SetNullMacro(Space* space) {
+	space->Kin_En = 0;
+	space->Pot_En = 0;
+	space->Energy = 0;
 	for (int i = 0; i < space->amount_cells; ++i) {
 		for (int j = 0; j < space->amount_cells; ++j) {
 			for (int k = 0; k < space->amount_cells; ++k) {
@@ -195,6 +208,7 @@ void SetNullMacro(Space* space) {
 						space->cells[i][j][k].atom_N[l]->power[n] = 0;
 					}
 					space->cells[i][j][k].atom_N[l]->LJ_potential = 0;
+					space->cells[i][j][k].atom_N[l]->Kinetic_en = 0;
 				}
 			}
 		}
@@ -207,6 +221,10 @@ double LJ_F(const double& r) {
 
 double LJ_P(const double& r) {
 	return AA / pow(r, 12) - BB / pow(r, 6);
+}
+
+double Kin_En(Space* space, Atom* mol) {
+	return space->m_N * (pow(mol->vel[0], 2) + pow(mol->vel[1], 2) + pow(mol->vel[2], 2)) / 2;
 }
 
 void Print_atoms(const Space& space) {

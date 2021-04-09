@@ -39,13 +39,13 @@ public:
 class Space {
 public:
 	Space();
-	double spacesize, cellsize, T, p, dt;
+	double spacesize, cellsize, T, p, dt, Kin_En, Pot_En, Energy;
 	int total_mol, amount_cells;
 	double m_N;
 	Cell cells[MAX_CELLS][MAX_CELLS][MAX_CELLS];
 	Molecule_N2 N_2[MAX_MOLS];
 	void Init_molecules();		//Initialize molecules
-	void MDStep();
+	void MDStep();		//MDStep
 };
 
 void Print_config(const Space& space, const int& amount_steps);		//Print surface parameters
