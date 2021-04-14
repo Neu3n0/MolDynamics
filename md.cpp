@@ -2,10 +2,12 @@
 
 Space::Space() : N_2() {
 	ifstream fin;
-	fin.open("config.txt");
+	//fin.open("config.txt");
+	fin.open("test_cfg.txt");
 	fin >> this->total_mol >> this->T >> this->p >> dt >> this->spacesize >> this->cellsize;
 	amount_cells = static_cast<int>(this->spacesize / this->cellsize);
-	m_N = (0.002 / 6.022) / 1000.0;
+	m_N = (0.001 / 6.022) / 1000.0;	//кг * 10^(-20)
+	//m_N = 1.6735575 * pow(10, -27);
 	Kin_En = 0;
 	Pot_En = 0;
 	Energy = 0;
@@ -14,7 +16,8 @@ Space::Space() : N_2() {
 
 void Space::Init_molecules() {
 	ifstream fin;
-	fin.open("init_molecules.txt");
+	//fin.open("init_molecules.txt");
+	fin.open("test_init.txt");
 	double coord[3]{ 0 };
 	double v[3]{ 0 };
 	for (int l = 0; l < this->total_mol; ++l) {
@@ -39,6 +42,8 @@ void Space::Init_molecules() {
 				printf("Incorrect data\n");
 			}
 		}
+		this->N_2[l].atom[0]->at2 = this->N_2[l].atom[1];
+		this->N_2[l].atom[1]->at2 = this->N_2[l].atom[0];
 	}
 	fin.close();
 	for (int i = 0; i < this->amount_cells; ++i) {
@@ -98,7 +103,9 @@ void Space::MDStep() {
 									if (!((l2 == l) && (ii == i) && (jj == j) && (kk == k))) {
 										at1 = this->cells[i][j][k].atom_N[l];
 										at2 = this->cells[ii][jj][kk].atom_N[l2];
-										at1->Power_shift(at2, shift);
+										if (at1->at2 != at2) {
+											at1->Power_shift(at2, shift);
+										}
 									}
 								}
 							}
@@ -236,7 +243,7 @@ double KX_P(const double& r) {
 }
 
 double KX_F(const double& r) {
-	return - 2 * k_N * (r0 - r);
+	return - 2 * k_N * (r - r0);
 }
 
 double LJ_F(const double& r) {

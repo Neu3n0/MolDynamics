@@ -13,6 +13,7 @@ public:
 	double power[3];
 	double LJ_potential;
 	double Kinetic_en;
+	Atom* at2;
 	void Coord_shift(Space* space);		//Coordinates shift
 	void Power_shift(Atom* mol_prob, const double* shift);		//Power shift
 	void Veloc_shift(Space* space);		//Velocitie shift
@@ -57,7 +58,8 @@ void Print_atoms(const Space& space);		//Print atoms
 void Print_mol(const Space& space);			//Print molec
 double LJ_F(const double& r);		//Lennard jones power
 double LJ_P(const double& r);		//Lennard jones potential
-double KX_P (const double& r);		//KX potential
+double KX_P(const double& r);		//KX potential
+double KX_F(const double& r);		//KX power
 void SetNullMacro(Space* space);		//Set null macro
 int WriteVTK(Space* space);		//VTK
 void Get_energy(std::ofstream& fout, const Space& space);		//Get energy

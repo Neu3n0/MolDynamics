@@ -20,12 +20,16 @@ using namespace std::chrono;
 const int MAX_MOLS = 100000;
 const int MAX_ATOMS_IN_CELL = 10;
 const int MAX_CELLS = 30;
-const double K_b = 0.00138;						//Boltzmann's constant
+//const double K_b = 0.00138;						//Boltzmann's constant
 const double A = 61625.553346;					//A = 12 * pow(SIGMA, 12) * EPS;
 const double B = 89.788794;						//B = 12 * pow(SIGMA, 6) * EPS;
 const double AA = 5135.462778;					//AA = pow(SIGMA, 12) * EPS;
 const double BB = 14.964799;					//BB = 2 * pow(SIGMA, 6) * EPS;
-const double k_N = 1;                           //Stretch constant
-const double r0 = 1;                            //Equilibrium length
+const double k_N = 326;                           //Stretch constantx
+const double r0 = 1.4;                            //Equilibrium length
+
+// 
 
 // g++ main.cpp md.cpp md.h header.h -o main
+
+// 1.5301 * 2.64^6 * 10^-2
