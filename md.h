@@ -21,8 +21,10 @@ public:
 
 class Molecule_N2 {
 public:
+	Molecule_N2() : KX_potential(0), KX_power(0) {}
 	Atom* atom[2];
-	double KX_power[3];
+	double KX_power;
+	double KX_potential;
 };
 
 class Cell {
@@ -55,6 +57,7 @@ void Print_atoms(const Space& space);		//Print atoms
 void Print_mol(const Space& space);			//Print molec
 double LJ_F(const double& r);		//Lennard jones power
 double LJ_P(const double& r);		//Lennard jones potential
+double KX_P (const double& r);		//KX potential
 void SetNullMacro(Space* space);		//Set null macro
 int WriteVTK(Space* space);		//VTK
 void Get_energy(std::ofstream& fout, const Space& space);		//Get energy

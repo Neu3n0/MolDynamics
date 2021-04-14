@@ -57,12 +57,13 @@ void Space::Init_molecules() {
 
 void Space::MDStep() {
 	//Coordinates and Cell chift
+
 	Atom* atom;
 	for (int i = 0; i < this->amount_cells; ++i) {
 		for (int j = 0; j < this->amount_cells; ++j) {
 			for (int k = 0; k < this->amount_cells; ++k) {
 				for (int l = 0; l < this->cells[i][j][k].amount_atoms; ++l) {
-					atom= this->cells[i][j][k].atom_N[l];
+					atom = this->cells[i][j][k].atom_N[l];
 					atom->Coord_shift(this);
 					if (atom->Change_Cell(this, i, j, k, l) == 1) {
 						--l;
@@ -107,8 +108,23 @@ void Space::MDStep() {
 			}
 		}
 	}
-	for (int i = 0; i < this->total_mol; ++i) {
-
+	
+	//KX power shift
+	for (int i = 0; i < this->total_mol; ++i) {		
+		Molecule_N2 mol = this->N_2[i];
+		at1 = mol.atom[0];
+		at2 = mol.atom[1]; 
+		double r = 0;
+		for (int a = 0; a < 3; ++a) {
+			r += pow((at1->coord[a] - at2->coord[a]), 2);
+		}
+		r = sqrt(r);
+		mol.KX_potential = KX_P(r);
+		mol.KX_power = KX_F(r);
+		for (int n = 0; n < 3; ++n) {
+			at1->power[n] += (at1->coord[n] - at2->coord[n]) / r * mol.KX_power;
+			at2->power[n] += (at2->coord[n] - at1->coord[n]) / r * mol.KX_power;
+		}
 	}
 
 	//Velocities shift
@@ -213,6 +229,14 @@ void SetNullMacro(Space* space) {
 			}
 		}
 	}
+}
+
+double KX_P(const double& r) {
+	return k_N * pow((r0 - r), 2);
+}
+
+double KX_F(const double& r) {
+	return - 2 * k_N * (r0 - r);
 }
 
 double LJ_F(const double& r) {
