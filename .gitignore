@@ -2,4 +2,8 @@
 output/get_atoms.txt
 output/get_atoms2.txt
 output/get_config.txt
+.vscode
 main.exe
+test_2.txt
+cube.txt
+cube_cfg.txt

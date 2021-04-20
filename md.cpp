@@ -4,6 +4,7 @@ Space::Space() : N_2() {
 	ifstream fin;
 	//fin.open("config.txt");
 	fin.open("test_cfg.txt");
+	//fin.open("cube_cfg.txt");
 	fin >> this->total_mol >> this->T >> this->p >> dt >> this->spacesize >> this->cellsize;
 	amount_cells = static_cast<int>(this->spacesize / this->cellsize);
 	m_N = (0.001 / 6.022) / 1000.0;	//кг * 10^(-20)
@@ -18,6 +19,7 @@ void Space::Init_molecules() {
 	ifstream fin;
 	//fin.open("init_molecules.txt");
 	fin.open("test_init.txt");
+	//fin.open("cube.txt");
 	double coord[3]{ 0 };
 	double v[3]{ 0 };
 	for (int l = 0; l < this->total_mol; ++l) {
@@ -121,16 +123,23 @@ void Space::MDStep() {
 		Molecule_N2 mol = this->N_2[i];
 		at1 = mol.atom[0];
 		at2 = mol.atom[1]; 
+		double shift[3] = { 0 };
+		if (static_cast<int>(at1->coord[0] / this->cellsize) == 0 && static_cast<int>(at2->coord[0] / this->cellsize) == this->amount_cells - 1) { shift[0] = - this->spacesize; }
+		if (static_cast<int>(at2->coord[0] / this->cellsize) == 0 && static_cast<int>(at1->coord[0] / this->cellsize) == this->amount_cells - 1) { shift[0] = this->spacesize; }
+		if (static_cast<int>(at1->coord[1] / this->cellsize) == 0 && static_cast<int>(at2->coord[1] / this->cellsize) == this->amount_cells - 1) { shift[1] = - this->spacesize; }
+		if (static_cast<int>(at2->coord[1] / this->cellsize) == 0 && static_cast<int>(at1->coord[1] / this->cellsize) == this->amount_cells - 1) { shift[1] = this->spacesize; }
+		if (static_cast<int>(at1->coord[2] / this->cellsize) == 0 && static_cast<int>(at2->coord[2] / this->cellsize) == this->amount_cells - 1) { shift[2] = - this->spacesize; }
+		if (static_cast<int>(at2->coord[2] / this->cellsize) == 0 && static_cast<int>(at1->coord[2] / this->cellsize) == this->amount_cells - 1) { shift[2] = this->spacesize; }
 		double r = 0;
 		for (int a = 0; a < 3; ++a) {
-			r += pow((at1->coord[a] - at2->coord[a]), 2);
+			r += pow((at1->coord[a] - at2->coord[a] - shift[a]), 2);
 		}
 		r = sqrt(r);
 		mol.KX_potential = KX_P(r);
 		mol.KX_power = KX_F(r);
 		for (int n = 0; n < 3; ++n) {
-			at1->power[n] += (at1->coord[n] - at2->coord[n]) / r * mol.KX_power;
-			at2->power[n] += (at2->coord[n] - at1->coord[n]) / r * mol.KX_power;
+			at1->power[n] += (at1->coord[n] - at2->coord[n] - shift[n]) / r * mol.KX_power;
+			at2->power[n] += (at2->coord[n] - at1->coord[n] + shift[n]) / r * mol.KX_power;
 		}
 	}
 
@@ -344,3 +353,4 @@ int WriteVTK(Space* space)
 	fclose(f);
 	return 0;
 }
+
