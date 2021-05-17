@@ -2,8 +2,8 @@
 
 Space::Space() : N_2() {
 	ifstream fin;
-	//fin.open("config.txt");
-	fin.open("test_cfg.txt");
+	fin.open("config.txt");
+	//fin.open("test_cfg.txt");
 	//fin.open("cube_cfg.txt");
 	fin >> this->total_mol >> this->T >> this->p >> dt >> this->spacesize >> this->cellsize;
 	amount_cells = static_cast<int>(this->spacesize / this->cellsize);
@@ -17,8 +17,8 @@ Space::Space() : N_2() {
 
 void Space::Init_molecules() {
 	ifstream fin;
-	//fin.open("init_molecules.txt");
-	fin.open("test_init.txt");
+	fin.open("init_molecules.txt");
+	//fin.open("test_init.txt");
 	//fin.open("cube.txt");
 	double coord[3]{ 0 };
 	double v[3]{ 0 };

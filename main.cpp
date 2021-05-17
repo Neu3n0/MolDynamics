@@ -16,10 +16,11 @@ int main() {
 
 	auto start = steady_clock::now();
 	for (int step = 0; step < amount_steps; ++step) {
-		std::cout << step << std::endl;
+		
 		space->MDStep();
 		Get_energy(fouten, *space);
-		if ((step % 10 == 0)) {
+		if ((step % 100 == 0)) {
+			std::cout << step << std::endl;
 			WriteVTK(space);
 		}
 	}

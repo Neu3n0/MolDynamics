@@ -28,8 +28,5 @@ const double BB = 14.964799;					//BB = 2 * pow(SIGMA, 6) * EPS;
 const double k_N = 326;                           //Stretch constantx
 const double r0 = 1.4;                            //Equilibrium length
 
-// 
 
 // g++ main.cpp md.cpp md.h header.h -o main
-
-// 1.5301 * 2.64^6 * 10^-2
